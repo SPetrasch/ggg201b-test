@@ -1,0 +1,106 @@
+# Homework 2
+       bash
+### Install Megahit
+    git clone https://github.com/voutcn/megahit.git
+    cd megahit
+    make -j 4
+
+### Download 5M E.coli dataset
+Same dataset as in lab 5
+
+    mkdir ~/work
+    cd ~/work
+    
+    curl -O -L https://s3.amazonaws.com/public.ged.msu.edu/ecoli_ref-5m.fastq.gz
+
+Check dataset
+
+    gunzip -c ecoli_ref-5m.fastq.gz | head
+
+### Install khmer
+
+    pip install khmer==2.0
+    
+### Split reads
+
+    gunzip -c ecoli_ref-5m.fastq.gz | \
+        split-paired-reads.py -1 top.R1.fq -2 top.R2.fq
+
+Check Head of R1
+
+    head top.R1.fq
+
+Check Head of R2
+
+    head top.R2.fq
+
+### Install Trimmomatic
+        sudo apt-get -y install trimmomatic
+
+### Download TrueSeq3-PE Adapters
+        wget https://anonscm.debian.org/cgit/debian-med/trimmomatic.git/plain/adapters/TruSeq3-PE.fa
+    
+### Run Trimmomatic
+
+        TrimmomaticPE top.R1.fq top.R2.fq \out-r1.fq orphan1.fq out-r2.fq orphan2.fq \ILLUMINACLIP:TruSeq3-PE.fa:2:40:15 \LEADING:2 TRAILING:2 \SLIDINGWINDOW:4:2 \MINLEN:25
+               
+### Interleave the reads
+This only merges the R1 and R2 reads but discards the ‘orphan’ reads
+      
+    interleave-reads.py out-r1.fq out-r2.fq > top-pe.fq
+
+Check the interleaved output
+
+    head top-pe.fq
+
+### Run Megahit Assembler
+   
+    ~/megahit/megahit --12 top-pe.fq [SP1]-r orphan1.fq -r orphan2.fq -o ecoli
+
+### Look at assembly
+Save assembly
+    cp ecoli/final.contigs.fa ecoli-assembly.fa
+    
+Look at assembly
+    head ecoli-assembly.fa
+    
+### Check Assembly
+Install QUAST
+
+    cd ~/
+    git clone https://github.com/ablab/quast.git -b release_4.2
+    export PYTHONPATH=$(pwd)/quast/libs/
+
+Run Quast
+
+    cd ~/work
+    ~/quast/quast.py ecoli-assembly.fa -o ecoli_report
+    
+    python2.7 ~/quast/quast.py ecoli-assembly.fa -o ecoli_report
+
+All statistics are based on contigs of size >= 500 bp, unless otherwise noted (e.g., "# contigs (>= 0 bp)" and "Total length (>= 0 bp)" include all contigs).
+
+Assembly                    ecoli-assembly
+# contigs (>= 0 bp)         118           
+# contigs (>= 1000 bp)      91            
+# contigs (>= 5000 bp)      69            
+# contigs (>= 10000 bp)     64            
+# contigs (>= 25000 bp)     52            
+# contigs (>= 50000 bp)     32            
+Total length (>= 0 bp)      4577368       
+Total length (>= 1000 bp)   4564802       
+Total length (>= 5000 bp)   4507996       
+Total length (>= 10000 bp)  4470785       
+Total length (>= 25000 bp)  4295818       
+Total length (>= 50000 bp)  3578637       
+# contigs                   101           
+Largest contig              246618        
+Total length                4571680       
+GC (%)                      50.75         
+N50                         105709        
+N75                         53842         
+L50                         15            
+L75                         30            
+# N's per 100 kbp           0.00          
+   
+[SP1]This one is the input file of paired end reads --> right format?
