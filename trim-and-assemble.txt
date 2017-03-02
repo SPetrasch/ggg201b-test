@@ -47,7 +47,7 @@ Check Head of R2
         TrimmomaticPE top.R1.fq top.R2.fq \out-r1.fq orphan1.fq out-r2.fq orphan2.fq \ILLUMINACLIP:TruSeq3-PE.fa:2:40:15 \LEADING:2 TRAILING:2 \SLIDINGWINDOW:4:2 \MINLEN:25
                
 ### Interleave the reads
-This only merges the R1 and R2 reads but discards the ‘orphan’ reads
+This only merges the R1 and R2 reads but discards the â€˜orphanâ€™ reads
       
     interleave-reads.py out-r1.fq out-r2.fq > top-pe.fq
 
@@ -58,7 +58,7 @@ Check the interleaved output
 ### Run Megahit Assembler
    
     ~/megahit/megahit --12 top-pe.fq [SP1]-r orphan1.fq -r orphan2.fq -o ecoli
-
+.
 ### Look at assembly
 Save assembly
     cp ecoli/final.contigs.fa ecoli-assembly.fa
@@ -105,5 +105,6 @@ L50                         15
 L75                         30            
 # N's per 100 kbp           0.00          
 
-The assembly is almost identical, we can conclude that trimming did not improve the assembly quality. The main reasons for this could be either a high quality of the sequencing data (few adapter sequences or erroneous bases) or a good performance of megahit even on untrimmed data – most likely it is a combination of both.
-[SP1]This one is the input file of paired end reads --> right format?
+The assembly is almost identical and the differences are smaller than 1%, which is most likely due to random factors as Assemblers do not always return 100% identical outputs (they are not perfect). We can conclude that trimming did not really improve the assembly quality. The main reasons for this could be either a high quality of the sequencing data (few adapter sequences or erroneous bases) or a good performance of megahit even on untrimmed data â€“ most likely it is a combination of both.
+
+
