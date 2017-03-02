@@ -58,6 +58,7 @@ Check the interleaved output
 ### Run Megahit Assembler
    
     ~/megahit/megahit --12 top-pe.fq [SP1]-r orphan1.fq -r orphan2.fq -o ecoli
+
 .
 ### Look at assembly
 Save assembly
@@ -105,6 +106,8 @@ L50                         15
 L75                         30            
 # N's per 100 kbp           0.00          
 
-The assembly is almost identical and the differences are smaller than 1%, which is most likely due to random factors as Assemblers do not always return 100% identical outputs (they are not perfect). We can conclude that trimming did not really improve the assembly quality. The main reasons for this could be either a high quality of the sequencing data (few adapter sequences or erroneous bases) or a good performance of megahit even on untrimmed data – most likely it is a combination of both.
+The assembly is almost identical and the differences are smaller than 1%, which is most likely due to random factors as Assemblers do not always return 100% identical outputs (they are not perfect). 
+We can conclude that trimming did not really improve the assembly quality. 
+The main reasons for this could be either a high quality of the sequencing data (few adapter sequences or erroneous bases) or a good performance of megahit even on untrimmed data – most likely it is a combination of both.
 
 
